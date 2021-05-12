@@ -1,9 +1,10 @@
 const db = require('../database');
 
 const BadRequestError = require('../errors/bad-request-error');
-
+const NotFoundError = require('../errors/not-found-error');
 const {
     requireOrderData,
+    orderNotFound,
 } = require('../utils/messeges');
 
 module.exports.getAllOrders = (req, res, next) => {
@@ -25,6 +26,9 @@ module.exports.getOrders = (req, res, next) => {
 module.exports.getOrder = (req, res, next) => {
     db.Order.findByPk(req.params.id)
         .then((order) => {
+            if (!order) {
+                throw new NotFoundError(orderNotFound);
+            }
             res.status(200).send({ data: order });
         })
         .catch(next);
@@ -33,6 +37,9 @@ module.exports.getOrder = (req, res, next) => {
 module.exports.getOrderStatus = (req, res, next) => {
     db.Order.findByPk(req.params.id)
         .then((order) => {
+            if (!order) {
+                throw new NotFoundError(orderNotFound);
+            }
             res.status(200).send({ data: { status: order.status } });
         })
         .catch(next);

@@ -7,7 +7,8 @@
     "dev": "nodemon --ignore sessions/ ./bin/www",
     "start": "node ./bin/www",
     "test": "jest",
-    "migrate": "node ./bin/migrate.js"
+    "migrate": "node ./bin/migrate.js",
+    "create-users": "node ./bin/create-initial-users.js"
   },
   "dependencies": {
     "bcrypt": "^5.0.1",

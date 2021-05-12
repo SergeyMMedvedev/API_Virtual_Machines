@@ -17,6 +17,7 @@ const incorrectNameOrPassword = 'Неправильные почта или па
 const userCreated = 'Пользователь успешно создан!';
 
 const requireOrderData = 'vCPU, vRAM and vHDD fields required';
+const orderNotFound = 'Order not found';
 
 const incorrectStatus = 'Your status does not allow you to perform an action';
 
@@ -37,6 +38,7 @@ module.exports = {
     userWasDeleted,
 
     requireOrderData,
+    orderNotFound,
 
     incorrectStatus,
 
