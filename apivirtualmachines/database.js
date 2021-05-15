@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize');
 const { DataTypes } = require('sequelize');
+require('dotenv').config();
 
 const sequelize = new Sequelize(process.env.DB_SCHEMA || 'postgres',
     process.env.DB_USER || 'postgres',
@@ -26,7 +27,7 @@ const User = sequelize.define('User', {
         type: Sequelize.STRING,
         allowNull: false,
         validate: {
-            len: [6],
+            len: [6, 100],
         },
     },
     status: {

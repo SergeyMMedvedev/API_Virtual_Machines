@@ -15,9 +15,10 @@ const validateUserBody = celebrate({
                 'string.max': 'name field must be no more than 50 characters',
                 'any.required': 'name field required',
             }),
-        password: Joi.string().required().min(6)
+        password: Joi.string().required().min(6).max(80)
             .messages({
                 'string.min': 'password field must contain at least 6 characters',
+                'string.max': 'password field must be no more than 80 characters',
                 'any.required': 'password field required',
             }),
         status: Joi.string().required().custom((value, helpers) => {
