@@ -1,36 +1,30 @@
 const { Joi, celebrate } = require('celebrate');
-// const validator = require('validator');
 
-// const validateObjId = celebrate({
-//     params: Joi.object().keys({
-//         id: Joi.string().required().custom((value, helpers) => {
-//             if (ObjectId.isValid(value)) {
-//                 return value;
-//             }
-//             return helpers.message('Неверный id');
-//         }),
-//     }),
-// });
+const validateObjId = celebrate({
+    params: Joi.object().keys({
+        id: Joi.number().required(),
+    }),
+});
 
 const validateUserBody = celebrate({
     body: Joi.object().keys({
         name: Joi.string().min(2).max(50).trim()
             .required()
             .messages({
-                'string.min': 'поле name должно включать минимум два символа',
-                'string.max': 'поле name должно включать не более 50 символов',
-                'any.required': 'поле name должно быть заполнено',
+                'string.min': 'name field must contain at least two characters',
+                'string.max': 'name field must be no more than 50 characters',
+                'any.required': 'name field required',
             }),
         password: Joi.string().required().min(6)
             .messages({
-                'string.min': 'поле name должно включать минимум 6 символов',
-                'any.required': 'поле password должно быть заполнено',
+                'string.min': 'password field must contain at least 6 characters',
+                'any.required': 'password field required',
             }),
         status: Joi.string().required().custom((value, helpers) => {
             if (['1', '2', '3'].includes(value)) {
                 return value;
             }
-            return helpers.message('Недопустимый сатус пользователя. Допустимые значения: 1, 2, 3');
+            return helpers.message('Invalid user status. Valid values: 1, 2, 3');
         }),
     }),
 });
@@ -40,14 +34,14 @@ const validateAuthentication = celebrate({
         name: Joi.string().min(2).max(50).trim()
             .required()
             .messages({
-                'string.min': 'поле name должно включать минимум два символа',
-                'string.max': 'поле name должно включать не более 50 символов',
-                'any.required': 'поле name должно быть заполнено',
+                'string.min': 'name field must contain at least two characters',
+                'string.max': 'name field must be no more than 50 characters',
+                'any.required': 'name field required',
             }),
         password: Joi.string().required().min(6)
             .messages({
-                'string.min': 'поле name должно включать минимум 6 символов',
-                'any.required': 'поле password должно быть заполнено',
+                'string.min': 'password field must contain at least 6 characters',
+                'any.required': 'password field required',
             }),
     }),
 });
@@ -82,4 +76,5 @@ module.exports = {
     validateUserBody,
     validateAuthentication,
     validateOrder,
+    validateObjId,
 };

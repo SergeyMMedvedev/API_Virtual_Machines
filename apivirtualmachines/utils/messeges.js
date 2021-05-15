@@ -1,25 +1,25 @@
-const requireNamePasswordStatus = 'name, password и status должны быть заполнены';
-const userAlreadyExist = 'Пользователь с таким name уже существует';
+const requireNamePasswordStatus = 'Name, password and status must be filled';
+const userAlreadyExist = 'A user with this name already exists';
 
-const serverErrorMessage = 'Ошибка на сервере';
-const notFound = 'Запрашиваемый ресурс не найден';
+const serverErrorMessage = 'Server error';
+const notFound = 'The requested resource is not found';
 
-const incorrectId = 'Неверный id';
-const requireAllFields = 'все поля должны быть заполнены';
-const userNotOwner = 'Вы не являетесь автором статьи';
+const incorrectId = 'Invalid id';
+const requireAllFields = 'All fields must be filled';
 
 const userNotFound = 'Нет пользователя с таким id';
-const userNotAuth = 'Необходима авторизация';
+const userNotAuth = 'Authorization required';
 const userWasDeleted = 'Пользователь был удален, необходимо зарегистрироваться заново';
 
-const incorrectNameOrPassword = 'Неправильные почта или пароль';
+const incorrectNameOrPassword = 'Incorrect name or password';
 
-const userCreated = 'Пользователь успешно создан!';
+const userCreated = 'User has been successfully created!';
 
 const requireOrderData = 'vCPU, vRAM and vHDD fields required';
 const orderNotFound = 'Order not found';
 
 const incorrectStatus = 'Your status does not allow you to perform an action';
+const notOwnOrder = 'You do not have an order with the specified number';
 
 module.exports = {
     requireNamePasswordStatus,
@@ -31,7 +31,6 @@ module.exports = {
     notFound,
     incorrectId,
     requireAllFields,
-    userNotOwner,
 
     userNotFound,
     userNotAuth,
@@ -41,5 +40,6 @@ module.exports = {
     orderNotFound,
 
     incorrectStatus,
+    notOwnOrder,
 
 };

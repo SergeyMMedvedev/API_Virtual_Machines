@@ -1,10 +1,9 @@
 version: "3.7"
 services:
   postgres:
-    image: postgres
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+    image: postgres:13.1
+    env_file:
+      - ./apivirtualmachines/.env
     ports: 
       - '5432:5432'
     volumes:
@@ -13,11 +12,8 @@ services:
   apivirtualmachines:
     build:
       context: .
-    environment:
-      DB_SCHEMA: postgres
-      DB_USER: postgres
-      DB_PASSWORD: postgres
-      DB_HOST: postgres
+    env_file:
+      - ./apivirtualmachines/.env
     depends_on:
       - postgres
     ports:

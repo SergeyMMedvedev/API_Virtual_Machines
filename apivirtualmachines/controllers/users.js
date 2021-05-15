@@ -8,6 +8,12 @@ const {
     userAlreadyExist,
 } = require('../utils/messeges');
 
+module.exports.getAllUsers = (req, res) => {
+    db.User.findAll().then((users) => {
+        res.send({ data: users });
+    });
+};
+
 module.exports.getLogin = (req, res) => {
     res.send('You got the login page!');
 };
@@ -27,24 +33,6 @@ module.exports.postLogin = (req, res, next) => {
 module.exports.getLogout = (req, res) => {
     req.logout();
     return res.send({ message: 'logout success' });
-};
-
-module.exports.getAllUsers = (req, res, next) => {
-    db.User.findAll({ include: db.Order })
-        .then((users) => {
-            res.status(200).send({ data: users });
-        })
-        .catch(next);
-};
-
-module.exports.getUser = (req, res) => {
-    db.User.findByPk(req.params.id)
-        .then((user) => {
-            res.status(200).send(JSON.stringify(user));
-        })
-        .catch((err) => {
-            res.status(500).send(JSON.stringify(err));
-        });
 };
 
 module.exports.createUser = (req, res, next) => {
@@ -77,26 +65,4 @@ module.exports.createUser = (req, res, next) => {
         });
     })
         .catch(next);
-};
-
-module.exports.deleteUser = (req, res) => {
-    db.User.destroy({
-        where: {
-            id: req.params.id,
-        },
-    })
-        .then(() => {
-            res.status(204).send();
-        })
-        .catch((err) => {
-            res.status(500).send(JSON.stringify(err));
-        });
-};
-
-module.exports.authrequired = (req, res) => {
-    if (req.isAuthenticated()) {
-        res.send({ message: 'you hit the authentication endpoint' });
-    } else {
-        res.send('you are not authorized\n');
-    }
 };

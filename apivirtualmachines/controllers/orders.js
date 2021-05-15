@@ -2,21 +2,18 @@ const db = require('../database');
 
 const BadRequestError = require('../errors/bad-request-error');
 const NotFoundError = require('../errors/not-found-error');
+const ForbiddenError = require('../errors/forbidden-error.js');
 const {
     requireOrderData,
     orderNotFound,
+    notOwnOrder,
 } = require('../utils/messeges');
 
-module.exports.getAllOrders = (req, res, next) => {
-    db.Order.findAll()
-        .then((orders) => {
-            res.status(200).send({ data: orders });
-        })
-        .catch(next);
-};
-
 module.exports.getOrders = (req, res, next) => {
-    db.Order.findAll({ where: { UserId: req.user.id } })
+    db.Order.findAll({
+        attributes: ['orderNumber', 'vCPU', 'vRAM', 'vHDD', 'createdAt'],
+        where: { UserId: req.user.id },
+    })
         .then((orders) => {
             res.status(200).send({ data: orders });
         })
@@ -29,7 +26,18 @@ module.exports.getOrder = (req, res, next) => {
             if (!order) {
                 throw new NotFoundError(orderNotFound);
             }
-            res.status(200).send({ data: order });
+            if (order.UserId !== req.user.id) {
+                throw new ForbiddenError(notOwnOrder);
+            }
+            res.status(200).send({
+                data: {
+                    orderNumber: order.orderNumber,
+                    vCPU: order.vCPU,
+                    vRAM: order.vRAM,
+                    vHDD: order.vHDD,
+                    createdAt: order.createdAt,
+                },
+            });
         })
         .catch(next);
 };
@@ -40,7 +48,15 @@ module.exports.getOrderStatus = (req, res, next) => {
             if (!order) {
                 throw new NotFoundError(orderNotFound);
             }
-            res.status(200).send({ data: { status: order.status } });
+            if (order.UserId !== req.user.id) {
+                throw new ForbiddenError(notOwnOrder);
+            }
+            res.status(200).send({
+                data: {
+                    orderNumber: order.orderNumber,
+                    status: order.status,
+                },
+            });
         })
         .catch(next);
 };
@@ -52,8 +68,6 @@ module.exports.createOrder = (req, res, next) => {
         throw new BadRequestError(requireOrderData);
     }
 
-    console.log('req.user.id', req.user.id);
-
     db.Order.create({
         vCPU,
         vRAM,
@@ -61,8 +75,15 @@ module.exports.createOrder = (req, res, next) => {
         UserId: req.user.id,
     })
         .then((order) => {
-            res.status(201).send({ data: order });
+            res.status(201).send({
+                data: {
+                    orderNumber: order.orderNumber,
+                    vCPU: order.vCPU,
+                    vRAM: order.vRAM,
+                    vHDD: order.vHDD,
+                    createdAt: order.createdAt,
+                },
+            });
         })
         .catch(next);
-    // .catch((err) => res.status(500).send({ data: err }));
 };
