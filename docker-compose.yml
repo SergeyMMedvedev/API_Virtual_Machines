@@ -12,6 +12,8 @@ services:
   apivirtualmachines:
     build:
       context: .
+    environment:
+      DB_HOST: postgres
     env_file:
       - ./apivirtualmachines/.env
     depends_on:
