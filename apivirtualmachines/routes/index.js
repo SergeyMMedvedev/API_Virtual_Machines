@@ -4,7 +4,7 @@ const usersRouter = require('./users');
 const ordersRouter = require('./orders');
 const { notFound } = require('../utils/messeges');
 
-router.use(
+router.use('/api/v1',
     usersRouter,
     ordersRouter,
 );

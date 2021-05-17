@@ -1,24 +1,24 @@
-SUPERUSER_NAME = Admin123
-SUPERUSER_PASSWORD = Admin123
-SUPERUSER_SATUS = "1"
+SUPERUSER_NAME=Admin123
+SUPERUSER_PASSWORD=Admin123
+SUPERUSER_SATUS=1
 
-USER2_NAME = username2
-USER2_PASSWORD = username2
-USER2_SATUS = "2"
+USER2_NAME=username2
+USER2_PASSWORD=username2
+USER2_SATUS=2
 
-USER3_NAME = username3
-USER3_PASSWORD = username3
-USER3_SATUS = "3"
+USER3_NAME=username3
+USER3_PASSWORD=username3
+USER3_SATUS=3
 
-PORT = 3000
+PORT=3000
 
-NODE_ENV = production
-PASSPORT_SECRET_KEY = jwtasdfasfasdfasdfasdfasfasdf
+PASSPORT_SECRET_KEY=jwtasdfasfasdfasdfasdfasfasdf
 
-DB_SCHEMA = postgres
-DB_USER = postgres
-DB_PASSWORD = postgres
-DB_HOST = postgres
+DB_SCHEMA=postgres
+DB_USER=postgres
+DB_PASSWORD=postgres
+DB_PORT=5432
 
-POSTGRES_USER = postgres
-POSTGRES_PASSWORD= postgres
+
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres

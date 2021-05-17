@@ -16,12 +16,13 @@ API позволяет:
 
 Для выполнения указанных операций используются следующие эндпоинты:
 
-- POST http://localhost:3000/users - регистрация пользователя
-- POST http://localhost:3000/login - авторизация пользователя (вход)
-- GET http://localhost:3000/logout - выход пользователя
-- POST http://localhost:3000/orders - размещение заказа на создание ВМ
-- GET http://localhost:3000/orders/:id/status - получение информации о статусе заказа ВМ
-- GET http://localhost:3000/orders/:id - получение описания заказа
+- POST http://localhost:3000/api/v1/users - регистрация пользователя
+- POST http://localhost:3000/api/v1/login - авторизация пользователя (вход)
+- GET http://localhost:3000/api/v1/logout - выход пользователя
+- POST http://localhost:3000/api/v1/orders - размещение заказа на создание ВМ
+- GET http://localhost:3000/api/v1/orders/:id/status - получение информации о статусе заказа ВМ
+- GET http://localhost:3000/api/v1/orders/:id - получение описания заказа пользователя
+- GET http://localhost:3000/api/v1/orders - получение описания всех заказов пользователя
 
 ## Запуск приложнеия
 Для начала необоходимо установить Docker на свой компьютер и клонировать проект API_Virtual_Machines.
@@ -29,6 +30,8 @@ API позволяет:
 Клонировать проект:
 ```
 git clone https://github.com/SergeyMMedvedev/API_Virtual_Machines.git
+
+Папка с проектом называется API_Virtual_Machines.
 ```
 Установить зависимости:
 ```
@@ -44,27 +47,30 @@ touch apivirtualmachines/.env
 И указать перечисленные ниже константы.
 Для простоты можно копировать содержимое файла env-example.txt и вставить в .env. Таким образом в .env будет указано:
 ```
-SUPERUSER_NAME = Admin123
-SUPERUSER_PASSWORD = Admin123
-SUPERUSER_SATUS = "1"
+SUPERUSER_NAME=Admin123
+SUPERUSER_PASSWORD=Admin123
+SUPERUSER_SATUS=1
 
-USER2_NAME = username2
-USER2_PASSWORD = username2
-USER2_SATUS = "2"
+USER2_NAME=username2
+USER2_PASSWORD=username2
+USER2_SATUS=2
 
-USER3_NAME = username3
-USER3_PASSWORD = username3
-USER3_SATUS = "3"
+USER3_NAME=username3
+USER3_PASSWORD=username3
+USER3_SATUS=3
 
-PORT = 3000
-NODE_ENV = production
-PASSPORT_SECRET_KEY = jwtasdfasfasdfasdfasdfasfasdf
-DB_SCHEMA = postgres
-DB_USER = postgres
-DB_PASSWORD = postgres
-DB_HOST = postgres
-POSTGRES_USER = postgres
-POSTGRES_PASSWORD= postgres
+PORT=3000
+
+PASSPORT_SECRET_KEY=jwtasdfasfasdfasdfasdfasfasdf
+
+DB_SCHEMA=postgres
+DB_USER=postgres
+DB_PASSWORD=postgres
+DB_PORT=5432
+
+
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
 ```
 
 Запустить докер контейнеры:
@@ -125,7 +131,7 @@ docker-compose run apivirtualmachines npm run create-users
 ### 1. Регистрация пользователя
 Права доступа: **статус "1"**.
 
-POST  - http://localhost:3000/users
+POST  - http://localhost:3000/api/v1/users
 
 Пример запроса:
 ```
@@ -149,7 +155,7 @@ POST  - http://localhost:3000/users
 ### 2. Вход пользователя
 Права доступа: **все**.
 
-POST http://localhost:3000/login
+POST http://localhost:3000/api/v1/login
 
 Пример запроса:
 ```
@@ -168,7 +174,7 @@ POST http://localhost:3000/login
 
 Права доступа: **все**.
 
-GET http://localhost:3000/logout
+GET http://localhost:3000/api/v1/logout
 
 Пример ответа:
 ```
@@ -181,7 +187,7 @@ GET http://localhost:3000/logout
 
 Права доступа: **статус "1" и "3"**.
 
-POST http://localhost:3000/orders 
+POST http://localhost:3000/api/v1/orders 
 
 Пример запроса:
 ```
@@ -209,7 +215,7 @@ POST http://localhost:3000/orders
 
 Права доступа: **статус "1" и "3"**.
 
-GET http://localhost:3000/orders/1/status
+GET http://localhost:3000/api/v1/orders/1/status
 
 Пример ответа:
 ```
@@ -224,7 +230,7 @@ GET http://localhost:3000/orders/1/status
 
 Права доступа: **статус "1" и "3"**.
 
-GET http://localhost:3000/orders/:id
+GET http://localhost:3000/api/v1/orders/:id
 
 Пример ответа:
 ```
@@ -239,6 +245,48 @@ GET http://localhost:3000/orders/:id
 }
 ```
 
+### 7. Получение описания всех заказов пользователя
+
+Права доступа: **статус "1" и "3"**.
+
+GET http://localhost:3000/api/v1/orders
+
+Пример ответа:
+```
+{
+    "data": [
+        {
+            "orderNumber": 1,
+            "vCPU": 2,
+            "vRAM": 2,
+            "vHDD": 1,
+            "createdAt": "2021-05-17T11:00:06.937Z"
+        },
+        {
+            "orderNumber": 2,
+            "vCPU": 2,
+            "vRAM": 2,
+            "vHDD": 1,
+            "createdAt": "2021-05-17T11:00:15.847Z"
+        },
+        {
+            "orderNumber": 3,
+            "vCPU": 2,
+            "vRAM": 2,
+            "vHDD": 1,
+            "createdAt": "2021-05-17T11:00:20.215Z"
+        },
+        {
+            "orderNumber": 4,
+            "vCPU": 2,
+            "vRAM": 2,
+            "vHDD": 1,
+            "createdAt": "2021-05-17T11:14:15.132Z"
+        }
+    ]
+}
+```
+
 ## Тесты
 
 Для запуска тестов необходимо создать отдельную юазу данных для тестов. 
@@ -250,7 +298,8 @@ psql -d postgres -U postgres
 password: postgres      (POSTGRES_PASSWORD из файла .env)
 CREATE DATABASE test;
 
-ctrl + c
+выйти из psql:
+ctrl + c или ввести quit
 ```
 Запуск тестов:
 

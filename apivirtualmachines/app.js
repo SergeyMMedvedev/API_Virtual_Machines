@@ -52,7 +52,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.get('/', (req, res) => {
+app.get('/api/v1', (req, res) => {
     res.send({
         message: {
             text: 'Welcome to API home page!',

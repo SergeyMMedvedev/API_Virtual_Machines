@@ -16,9 +16,9 @@ router.get('/logout', getLogout);
 
 router.post('/login', validateAuthentication, postLogin);
 
-router.get('/users/all', getAllUsers);
-
 router.use(auth);
+
+router.get('/users/all', checkSuperStatus, getAllUsers);
 
 router.use(checkStatus);
 

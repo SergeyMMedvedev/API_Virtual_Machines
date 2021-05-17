@@ -56,16 +56,16 @@ function randomString(i) {
 };
 
 describe('Доступ к главной странице', () => {
-    it(`GET "/" должен возвращать "Welcome to API home page!" и корректный статус`, () => request.get('/').then((response) => {
+    it(`GET "/api/v1/" должен возвращать "Welcome to API home page!" и корректный статус`, () => request.get('/api/v1/').then((response) => {
         expect(response.status).toBe(200);
         expect(response.body.message.text).toBe("Welcome to API home page!");
     }));
 });
 
 describe('Авторизация', () => {
-    it('POST "/login": Пользователь 1 может выполинть вход', () =>
+    it('POST "/api/v1/login": Пользователь 1 может выполинть вход', () =>
         request
-            .post('/login')
+            .post('/api/v1/login')
             .send({
                 "name": "Admin123",
                 "password": "Admin123"
@@ -76,9 +76,9 @@ describe('Авторизация', () => {
                 expect(response.headers['content-type']).toMatch('application/json');
                 expect(response.body.message).toBe('You were authenticated & logged in!');
             }));
-    it('POST "/login": Имя должно содрежать минимум 2 символа', () =>
+    it('POST "/api/v1/login": Имя должно содрежать минимум 2 символа', () =>
         request
-            .post('/login')
+            .post('/api/v1/login')
             .send({
                 "name": "a",
                 "password": "Admin123"
@@ -91,9 +91,9 @@ describe('Авторизация', () => {
                 expect(response.body.validation.body.message).toBe('name field must contain at least two characters');
             }));
 
-    it('POST "/login": Имя должно содрежать максимум 50 символов', () =>
+    it('POST "/api/v1/login": Имя должно содрежать максимум 50 символов', () =>
         request
-            .post('/login')
+            .post('/api/v1/login')
             .send({
                 "name": "0123456789 0123456789 0123456789 0123456789 0123456789 0123456789",
                 "password": "Admin123"
@@ -107,9 +107,9 @@ describe('Авторизация', () => {
             }));
 
 
-    it('POST "/login": Имя не может состоянть из одних пробелов', () =>
+    it('POST "/api/v1/login": Имя не может состоянть из одних пробелов', () =>
         request
-            .post('/login')
+            .post('/api/v1/login')
             .send({
                 "name": '       ',
                 "password": "Admin123"
@@ -122,9 +122,9 @@ describe('Авторизация', () => {
                 expect(response.body.validation.body.message).toBe("\"name\" is not allowed to be empty");
             }));
 
-    it('POST "/login": Пароль минимум 6 символов', () =>
+    it('POST "/api/v1/login": Пароль минимум 6 символов', () =>
         request
-            .post('/login')
+            .post('/api/v1/login')
             .send({
                 "name": "Admin123",
                 "password": "a"
@@ -138,9 +138,9 @@ describe('Авторизация', () => {
             }));
 
 
-    it('POST "/login": Ошибка при вводе несоответствующего имени', () =>
+    it('POST "/api/v1/login": Ошибка при вводе несоответствующего имени', () =>
         request
-            .post('/login')
+            .post('/api/v1/login')
             .send({
                 "name": randomString(10),
                 "password": "Admin123"
@@ -152,9 +152,9 @@ describe('Авторизация', () => {
                 expect(response.body.message).toBe('Incorrect name or password');
             }));
 
-    it('POST "/login": Ошибка при вводе несоответствующего пароля', () =>
+    it('POST "/api/v1/login": Ошибка при вводе несоответствующего пароля', () =>
         request
-            .post('/login')
+            .post('/api/v1/login')
             .send({
                 "name": "Admin123",
                 "password": randomString(10)
@@ -166,9 +166,9 @@ describe('Авторизация', () => {
                 expect(response.body.message).toBe('Incorrect name or password');
             }));
 
-    it('GET "/logout": Пользователь может выйти из системы', () =>
+    it('GET "/api/v1/logout": Пользователь может выйти из системы', () =>
         request
-            .get('/logout')
+            .get('/api/v1/logout')
             .then((response) => {
                 expect(response.status).toBe(200);
                 expect(response.headers['content-type']).toMatch('application/json');
@@ -178,9 +178,9 @@ describe('Авторизация', () => {
 
 
 describe('Защита авторизацией', () => {
-    it(`POST "/users": регистрация пользователя защищена`, async () => {
+    it(`POST "/api/v1/users": регистрация пользователя защищена`, async () => {
         response = await request
-            .post('/users')
+            .post('/api/v1/users')
             .send({
                 "name": "newUser2",
                 "password": "newUser2",
@@ -191,9 +191,9 @@ describe('Защита авторизацией', () => {
         expect(response.body.message).toBe("Authorization required");
     });
 
-    it(`POST "/orders": создание заказа защищено`, async () => {
+    it(`POST "/api/v1/orders": создание заказа защищено`, async () => {
         response = await request
-            .post('/orders')
+            .post('/api/v1/orders')
             .send({
                 "vCPU": 2,
                 "vRAM": 1,
@@ -204,25 +204,25 @@ describe('Защита авторизацией', () => {
         expect(response.body.message).toBe("Authorization required");
     });
 
-    it(`GET "/orders/:id/status": получение информации о состоянии заказа ВМ защищено`, async () => {
+    it(`GET "/api/v1/orders/:id/status": получение информации о состоянии заказа ВМ защищено`, async () => {
         response = await request
-            .get('/orders/1/status')
+            .get('/api/v1/orders/1/status')
         expect(response.status).toBe(401);
         expect(response.headers['content-type']).toMatch('application/json');
         expect(response.body.message).toBe("Authorization required");
     });
 
-    it(`GET "/orders/:id": получение описания заказа защищено`, async () => {
+    it(`GET "/api/v1/orders/:id": получение описания заказа защищено`, async () => {
         response = await request
-            .get('/orders/1')
+            .get('/api/v1/orders/1')
         expect(response.status).toBe(401);
         expect(response.headers['content-type']).toMatch('application/json');
         expect(response.body.message).toBe("Authorization required");
     });
 
-    it(`GET "/orders": получение описания всех заказов пользователя защищено`, async () => {
+    it(`GET "/api/v1/orders": получение описания всех заказов пользователя защищено`, async () => {
         response = await request
-            .get('/orders')
+            .get('/api/v1/orders')
         expect(response.status).toBe(401);
         expect(response.headers['content-type']).toMatch('application/json');
         expect(response.body.message).toBe("Authorization required");
@@ -234,7 +234,7 @@ describe('Регистрация нового пользователя', () => {
     let session = null;
     beforeEach(async () => {
         const response = await request
-            .post('/login')
+            .post('/api/v1/login')
             .send({
                 "name": "Admin123",
                 "password": "Admin123"
@@ -250,9 +250,9 @@ describe('Регистрация нового пользователя', () => {
             .join(';')
     });
 
-    it(`POST "/users": Пользователь 1 может создать нового пользователя `, async () => {
+    it(`POST "/api/v1/users": Пользователь 1 может создать нового пользователя `, async () => {
         response = await request
-            .post('/users')
+            .post('/api/v1/users')
             .send({
                 "name": "newUser",
                 "password": "newUser",
@@ -265,9 +265,9 @@ describe('Регистрация нового пользователя', () => {
         expect(response.body.data.status).toBe('3');
     });
 
-    it(`POST "/users": При создании пользователя имя должно быть уникально`, async () => {
+    it(`POST "/api/v1/users": При создании пользователя имя должно быть уникально`, async () => {
         response = await request
-            .post('/users')
+            .post('/api/v1/users')
             .send({
                 "name": "newUser",
                 "password": "newUser",
@@ -280,9 +280,9 @@ describe('Регистрация нового пользователя', () => {
         expect(response.body.message).toBe("A user with this name already exists");
     });
 
-    it(`POST "/users": При создании пользователя имя обязательно`, async () => {
+    it(`POST "/api/v1/users": При создании пользователя имя обязательно`, async () => {
         response = await request
-            .post('/users')
+            .post('/api/v1/users')
             .send({
                 "name": "",
                 "password": "newUser",
@@ -295,9 +295,9 @@ describe('Регистрация нового пользователя', () => {
         expect(response.body.validation.body.message).toBe("\"name\" is not allowed to be empty");
     });
 
-    it(`POST "/users": При создании пользователя пароль обязателен`, async () => {
+    it(`POST "/api/v1/users": При создании пользователя пароль обязателен`, async () => {
         response = await request
-            .post('/users')
+            .post('/api/v1/users')
             .send({
                 "name": "newUser2",
                 "password": "",
@@ -310,9 +310,9 @@ describe('Регистрация нового пользователя', () => {
         expect(response.body.validation.body.message).toBe("\"password\" is not allowed to be empty");
     });
 
-    it(`POST "/users": При создании пользователя статус обязателен`, async () => {
+    it(`POST "/api/v1/users": При создании пользователя статус обязателен`, async () => {
         response = await request
-            .post('/users')
+            .post('/api/v1/users')
             .send({
                 "name": "newUser2",
                 "password": "newUser2",
@@ -325,9 +325,9 @@ describe('Регистрация нового пользователя', () => {
         expect(response.body.validation.body.message).toBe("\"status\" is not allowed to be empty");
     });
 
-    it(`POST "/users": При создании пользователя имя должно содержать не менее 2 символов`, async () => {
+    it(`POST "/api/v1/users": При создании пользователя имя должно содержать не менее 2 символов`, async () => {
         response = await request
-            .post('/users')
+            .post('/api/v1/users')
             .send({
                 "name": "n",
                 "password": "newUser2",
@@ -340,9 +340,9 @@ describe('Регистрация нового пользователя', () => {
         expect(response.body.validation.body.message).toBe("name field must contain at least two characters");
     });
 
-    it(`POST "/users": При создании пользователя имя должно содержать не более 50 символов`, async () => {
+    it(`POST "/api/v1/users": При создании пользователя имя должно содержать не более 50 символов`, async () => {
         response = await request
-            .post('/users')
+            .post('/api/v1/users')
             .send({
                 "name": "012345678901234567890123456789012345678901234567890123456789",
                 "password": "newUser2",
@@ -355,9 +355,9 @@ describe('Регистрация нового пользователя', () => {
         expect(response.body.validation.body.message).toBe("name field must be no more than 50 characters");
     });
 
-    it(`POST "/users": При создании пользователя имя не должно содержать только пробелы`, async () => {
+    it(`POST "/api/v1/users": При создании пользователя имя не должно содержать только пробелы`, async () => {
         response = await request
-            .post('/users')
+            .post('/api/v1/users')
             .send({
                 "name": "    ",
                 "password": "newUser2",
@@ -370,9 +370,9 @@ describe('Регистрация нового пользователя', () => {
         expect(response.body.validation.body.message).toBe("\"name\" is not allowed to be empty");
     });
 
-    it(`POST "/users": При создании пользователя пароль должен содержать не менее 6 символов`, async () => {
+    it(`POST "/api/v1/users": При создании пользователя пароль должен содержать не менее 6 символов`, async () => {
         response = await request
-            .post('/users')
+            .post('/api/v1/users')
             .send({
                 "name": "newUser2",
                 "password": "n",
@@ -385,9 +385,9 @@ describe('Регистрация нового пользователя', () => {
         expect(response.body.validation.body.message).toBe("password field must contain at least 6 characters");
     });
 
-    it(`POST "/users": При создании пользователя пароль должен содержать не более 80 символов`, async () => {
+    it(`POST "/api/v1/users": При создании пользователя пароль должен содержать не более 80 символов`, async () => {
         response = await request
-            .post('/users')
+            .post('/api/v1/users')
             .send({
                 "name": "newUser2",
                 "password": "012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789",
@@ -400,9 +400,9 @@ describe('Регистрация нового пользователя', () => {
         expect(response.body.validation.body.message).toBe("password field must be no more than 80 characters");
     });
 
-    it(`POST "/users": При создании пользователя статус может принимать только значения "1", "2" и "3"`, async () => {
+    it(`POST "/api/v1/users": При создании пользователя статус может принимать только значения "1", "2" и "3"`, async () => {
         response = await request
-            .post('/users')
+            .post('/api/v1/users')
             .send({
                 "name": "newUser2",
                 "password": "newUser2",
@@ -433,7 +433,7 @@ describe('Создание заказа', () => {
     let session = null;
     beforeEach(async () => {
         const response = await request
-            .post('/login')
+            .post('/api/v1/login')
             .send({
                 "name": "Admin123",
                 "password": "Admin123"
@@ -449,9 +449,9 @@ describe('Создание заказа', () => {
             .join(';')
     });
 
-    it(`POST "/orders": Пользователь 1 может создать заказ ВМ `, async () => {
+    it(`POST "/api/v1/orders": Пользователь 1 может создать заказ ВМ `, async () => {
         response = await request
-            .post('/orders')
+            .post('/api/v1/orders')
             .send({
                 "vCPU": 2,
                 "vRAM": 2,
@@ -466,9 +466,9 @@ describe('Создание заказа', () => {
         expect(response.body.data.vHDD).toBe(2);
     });
 
-    it(`POST "/orders": При создании заказа vCPU обязательно `, async () => {
+    it(`POST "/api/v1/orders": При создании заказа vCPU обязательно `, async () => {
         response = await request
-            .post('/orders')
+            .post('/api/v1/orders')
             .send({
                 "vRAM": 2,
                 "vHDD": 2
@@ -479,9 +479,9 @@ describe('Создание заказа', () => {
         expect(response.body.validation.body.message).toBe("vCPU field required");
     });
 
-    it(`POST "/orders": При создании заказа vRAM обязательно `, async () => {
+    it(`POST "/api/v1/orders": При создании заказа vRAM обязательно `, async () => {
         response = await request
-            .post('/orders')
+            .post('/api/v1/orders')
             .send({
                 "vCPU": 2,
                 "vHDD": 2
@@ -492,9 +492,9 @@ describe('Создание заказа', () => {
         expect(response.body.validation.body.message).toBe("vRAM field required");
     });
 
-    it(`POST "/orders": При создании заказа vHDD обязательно `, async () => {
+    it(`POST "/api/v1/orders": При создании заказа vHDD обязательно `, async () => {
         response = await request
-            .post('/orders')
+            .post('/api/v1/orders')
             .send({
                 "vCPU": 2,
                 "vRAM": 2
@@ -505,9 +505,9 @@ describe('Создание заказа', () => {
         expect(response.body.validation.body.message).toBe("vHDD field required");
     });
 
-    it(`POST "/orders": При создании заказа vCPU принимает только целые положительные числа `, async () => {
+    it(`POST "/api/v1/orders": При создании заказа vCPU принимает только целые положительные числа `, async () => {
         response = await request
-            .post('/orders')
+            .post('/api/v1/orders')
             .send({
                 "vCPU": "a",
                 "vRAM": 2,
@@ -519,9 +519,9 @@ describe('Создание заказа', () => {
         expect(response.body.validation.body.message).toBe("\"vCPU\" must be a number");
     });
 
-    it(`POST "/orders": При создании заказа vCPU принимает положительные числа не менне 2`, async () => {
+    it(`POST "/api/v1/orders": При создании заказа vCPU принимает положительные числа не менне 2`, async () => {
         response = await request
-            .post('/orders')
+            .post('/api/v1/orders')
             .send({
                 "vCPU": 1,
                 "vRAM": 2,
@@ -533,9 +533,9 @@ describe('Создание заказа', () => {
         expect(response.body.validation.body.message).toBe("the number of vCPUs must be at least 2");
     });
 
-    it(`POST "/orders": При создании заказа vCPU принимает положительные числа не более 80`, async () => {
+    it(`POST "/api/v1/orders": При создании заказа vCPU принимает положительные числа не более 80`, async () => {
         response = await request
-            .post('/orders')
+            .post('/api/v1/orders')
             .send({
                 "vCPU": 81,
                 "vRAM": 2,
@@ -550,9 +550,9 @@ describe('Создание заказа', () => {
 
 
 
-    it(`POST "/orders": При создании заказа vRAM принимает только целые положительные числа `, async () => {
+    it(`POST "/api/v1/orders": При создании заказа vRAM принимает только целые положительные числа `, async () => {
         response = await request
-            .post('/orders')
+            .post('/api/v1/orders')
             .send({
                 "vCPU": 2,
                 "vRAM": "sdf",
@@ -564,9 +564,9 @@ describe('Создание заказа', () => {
         expect(response.body.validation.body.message).toBe("\"vRAM\" must be a number");
     });
 
-    it(`POST "/orders": При создании заказа vRAM принимает положительные числа не менне 2`, async () => {
+    it(`POST "/api/v1/orders": При создании заказа vRAM принимает положительные числа не менне 2`, async () => {
         response = await request
-            .post('/orders')
+            .post('/api/v1/orders')
             .send({
                 "vCPU": 2,
                 "vRAM": 1,
@@ -578,9 +578,9 @@ describe('Создание заказа', () => {
         expect(response.body.validation.body.message).toBe("the number of vRAMs must be at least 2");
     });
 
-    it(`POST "/orders": При создании заказа vRAM принимает положительные числа не более 640`, async () => {
+    it(`POST "/api/v1/orders": При создании заказа vRAM принимает положительные числа не более 640`, async () => {
         response = await request
-            .post('/orders')
+            .post('/api/v1/orders')
             .send({
                 "vCPU": 2,
                 "vRAM": 641,
@@ -594,9 +594,9 @@ describe('Создание заказа', () => {
 
 
 
-    it(`POST "/orders": При создании заказа vHDD принимает только целые положительные числа `, async () => {
+    it(`POST "/api/v1/orders": При создании заказа vHDD принимает только целые положительные числа `, async () => {
         response = await request
-            .post('/orders')
+            .post('/api/v1/orders')
             .send({
                 "vCPU": 2,
                 "vRAM": 2,
@@ -608,9 +608,9 @@ describe('Создание заказа', () => {
         expect(response.body.validation.body.message).toBe("\"vHDD\" must be a number");
     });
 
-    it(`POST "/orders": При создании заказа vHDD принимает положительные числа не менне 1`, async () => {
+    it(`POST "/api/v1/orders": При создании заказа vHDD принимает положительные числа не менне 1`, async () => {
         response = await request
-            .post('/orders')
+            .post('/api/v1/orders')
             .send({
                 "vCPU": 2,
                 "vRAM": 2,
@@ -622,9 +622,9 @@ describe('Создание заказа', () => {
         expect(response.body.validation.body.message).toBe("the number of vHDDs must be at least 1");
     });
 
-    it(`POST "/orders": При создании заказа vHDD принимает положительные числа не более 8192`, async () => {
+    it(`POST "/api/v1/orders": При создании заказа vHDD принимает положительные числа не более 8192`, async () => {
         response = await request
-            .post('/orders')
+            .post('/api/v1/orders')
             .send({
                 "vCPU": 2,
                 "vRAM": 2,
@@ -636,9 +636,9 @@ describe('Создание заказа', () => {
         expect(response.body.validation.body.message).toBe("the number of vHDDs must be no more than 8192");
     });
 
-    it(`POST "/orders": При создании заказа не принимаются отрицательные или дробные числа`, async () => {
+    it(`POST "/api/v1/orders": При создании заказа не принимаются отрицательные или дробные числа`, async () => {
         response = await request
-            .post('/orders')
+            .post('/api/v1/orders')
             .send({
                 "vCPU": 2.5,
                 "vRAM": 2.5,
@@ -677,7 +677,7 @@ describe('Получение данных о заказе', () => {
     let session = null;
     beforeEach(async () => {
         const response = await request
-            .post('/login')
+            .post('/api/v1/login')
             .send({
                 "name": "Admin123",
                 "password": "Admin123"
@@ -693,9 +693,9 @@ describe('Получение данных о заказе', () => {
             .join(';')
     });
 
-    it(`POST "/orders": Пользователь 1 создает второй заказ `, async () => {
+    it(`POST "/api/v1/orders": Пользователь 1 создает второй заказ `, async () => {
         response = await request
-            .post('/orders')
+            .post('/api/v1/orders')
             .send({
                 "vCPU": 3,
                 "vRAM": 3,
@@ -705,9 +705,9 @@ describe('Получение данных о заказе', () => {
         expect(response.status).toBe(201);
     });
 
-    it(`POST "/orders": Пользователь 3 создает  заказ `, async () => {
+    it(`POST "/api/v1/orders": Пользователь 3 создает  заказ `, async () => {
         let response = await request
-            .post('/login')
+            .post('/api/v1/login')
             .send({
                 "name": "username3",
                 "password": "username3"
@@ -723,7 +723,7 @@ describe('Получение данных о заказе', () => {
             .join(';')
 
         response = await request
-            .post('/orders')
+            .post('/api/v1/orders')
             .send({
                 "vCPU": 3,
                 "vRAM": 3,
@@ -733,9 +733,9 @@ describe('Получение данных о заказе', () => {
         expect(response.status).toBe(201);
     });
 
-    it(`GET "/orders": Пользователь 1 может получить информацию о своих заказах`, async () => {
+    it(`GET "/api/v1/orders": Пользователь 1 может получить информацию о своих заказах`, async () => {
         response = await request
-            .get('/orders')
+            .get('/api/v1/orders')
             .set('Cookie', session)
         expect(response.status).toBe(200);
         expect(response.headers['content-type']).toMatch('application/json');
@@ -744,9 +744,9 @@ describe('Получение данных о заказе', () => {
         expect(response.body.data.length).toBe(2);
     });
 
-    it(`GET "/orders/:id": Пользователь 1 может получить информацию об одном заказе`, async () => {
+    it(`GET "/api/v1/orders/:id": Пользователь 1 может получить информацию об одном заказе`, async () => {
         response = await request
-            .get('/orders/2')
+            .get('/api/v1/orders/2')
             .set('Cookie', session)
         expect(response.status).toBe(200);
         expect(response.headers['content-type']).toMatch('application/json');
@@ -756,36 +756,36 @@ describe('Получение данных о заказе', () => {
         expect(response.body.data.vHDD).toBe(3);
     });
 
-    it(`GET "/orders/:id": Пользователь 1 не может получить информацию о чужом заказе`, async () => {
+    it(`GET "/api/v1/orders/:id": Пользователь 1 не может получить информацию о чужом заказе`, async () => {
         response = await request
-            .get('/orders/3')
+            .get('/api/v1/orders/3')
             .set('Cookie', session)
         expect(response.status).toBe(403);
         expect(response.headers['content-type']).toMatch('application/json');
         expect(response.body.message).toBe("You do not have an order with the specified number");
     });
 
-    it(`GET "/orders/:id": Пользователь 1 не может получить информацию о несуществующем заказе`, async () => {
+    it(`GET "/api/v1/orders/:id": Пользователь 1 не может получить информацию о несуществующем заказе`, async () => {
         response = await request
-            .get('/orders/4')
+            .get('/api/v1/orders/4')
             .set('Cookie', session)
         expect(response.status).toBe(404);
         expect(response.headers['content-type']).toMatch('application/json');
         expect(response.body.message).toBe("Order not found");
     });
 
-    it(`GET "/orders/:id": Для получения информации о заказе можно передавать только целое положительное число`, async () => {
+    it(`GET "/api/v1/orders/:id": Для получения информации о заказе можно передавать только целое положительное число`, async () => {
         response = await request
-            .get('/orders/asd')
+            .get('/api/v1/orders/asd')
             .set('Cookie', session)
         expect(response.status).toBe(400);
         expect(response.headers['content-type']).toMatch('application/json');
         expect(response.body.validation.params.message).toBe("\"id\" must be a number");
     });
 
-    it(`GET "/orders/:id/status": Пользователь 1 может получить информацию о статусе заказа`, async () => {
+    it(`GET "/api/v1/orders/:id/status": Пользователь 1 может получить информацию о статусе заказа`, async () => {
         response = await request
-            .get('/orders/1/status')
+            .get('/api/v1/orders/1/status')
             .set('Cookie', session)
         console.log(response.body)
         expect(response.status).toBe(200);
@@ -799,7 +799,7 @@ describe('Ограничения прав пользователя со стат
     let session = null;
     beforeEach(async () => {
         const response = await request
-            .post('/login')
+            .post('/api/v1/login')
             .send({
                 "name": "username2",
                 "password": "username2"
@@ -818,9 +818,9 @@ describe('Ограничения прав пользователя со стат
 
 
 
-    it(`POST "/users": Пользователь 2 не может регистрировать пользователей`, async () => {
+    it(`POST "/api/v1/users": Пользователь 2 не может регистрировать пользователей`, async () => {
         response = await request
-            .post('/users')
+            .post('/api/v1/users')
             .send({
                 "name": "newUser2",
                 "password": "newUser2",
@@ -832,9 +832,9 @@ describe('Ограничения прав пользователя со стат
         expect(response.body.message).toBe("Your status does not allow you to perform an action");
     });
 
-    it(`POST "/orders": Пользователь 2 не может создавать заказы`, async () => {
+    it(`POST "/api/v1/orders": Пользователь 2 не может создавать заказы`, async () => {
         response = await request
-            .post('/orders')
+            .post('/api/v1/orders')
             .send({
                 "vCPU": 2,
                 "vRAM": 1,
@@ -846,36 +846,36 @@ describe('Ограничения прав пользователя со стат
         expect(response.body.message).toBe("Your status does not allow you to perform an action");
     });
 
-    it(`GET "/orders/:id/status": Пользователь 2 не может получать статус заказов`, async () => {
+    it(`GET "/api/v1/orders/:id/status": Пользователь 2 не может получать статус заказов`, async () => {
         response = await request
-            .get('/orders/1/status')
+            .get('/api/v1/orders/1/status')
             .set('Cookie', session)
         expect(response.status).toBe(403);
         expect(response.headers['content-type']).toMatch('application/json');
         expect(response.body.message).toBe("Your status does not allow you to perform an action");
     });
 
-    it(`GET "/orders/:id": Пользователь 2 не может получат описания заказа`, async () => {
+    it(`GET "/api/v1/orders/:id": Пользователь 2 не может получат описания заказа`, async () => {
         response = await request
-            .get('/orders/1')
+            .get('/api/v1/orders/1')
             .set('Cookie', session)
         expect(response.status).toBe(403);
         expect(response.headers['content-type']).toMatch('application/json');
         expect(response.body.message).toBe("Your status does not allow you to perform an action");
     });
 
-    it(`GET "/orders": Пользователь 2 не может получат описания заказов`, async () => {
+    it(`GET "/api/v1/orders": Пользователь 2 не может получат описания заказов`, async () => {
         response = await request
-            .get('/orders')
+            .get('/api/v1/orders')
             .set('Cookie', session)
         expect(response.status).toBe(403);
         expect(response.headers['content-type']).toMatch('application/json');
         expect(response.body.message).toBe("Your status does not allow you to perform an action");
     });
 
-    it(`GET "/logout": Пользователь 2 может выйти`, async () => {
+    it(`GET "/api/v1/logout": Пользователь 2 может выйти`, async () => {
         response = await request
-            .get('/logout')
+            .get('/api/v1/logout')
             .set('Cookie', session)
         expect(response.status).toBe(200);
         expect(response.headers['content-type']).toMatch('application/json');
@@ -904,7 +904,7 @@ describe('Ограничения прав пользователя со стат
     let session = null;
     beforeEach(async () => {
         const response = await request
-            .post('/login')
+            .post('/api/v1/login')
             .send({
                 "name": "username3",
                 "password": "username3"
@@ -920,9 +920,9 @@ describe('Ограничения прав пользователя со стат
             .join(';')
     });
 
-    it(`POST "/users": Пользователь 3 не может регистрировать пользователей`, async () => {
+    it(`POST "/api/v1/users": Пользователь 3 не может регистрировать пользователей`, async () => {
         response = await request
-            .post('/users')
+            .post('/api/v1/users')
             .send({
                 "name": "newUser2",
                 "password": "newUser2",
