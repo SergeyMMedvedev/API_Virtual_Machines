@@ -14,8 +14,9 @@ API позволяет:
  - Получать информацию о состоянии заказа ВМ - done/in progress. 
  - Получать описание заказа
 
-Для выполнения указанных операций используются следующие эндпоинты:
+При локальном запуске проекта для выполнения указанных операций используются следующие эндпоинты:
 
+- GET http://localhost:3000/api/v1 - стартовая страница
 - POST http://localhost:3000/api/v1/users - регистрация пользователя
 - POST http://localhost:3000/api/v1/login - авторизация пользователя (вход)
 - GET http://localhost:3000/api/v1/logout - выход пользователя
@@ -23,6 +24,18 @@ API позволяет:
 - GET http://localhost:3000/api/v1/orders/:id/status - получение информации о статусе заказа ВМ
 - GET http://localhost:3000/api/v1/orders/:id - получение описания заказа пользователя
 - GET http://localhost:3000/api/v1/orders - получение описания всех заказов пользователя
+
+Также указанные эдпоинты доступны по адресам:
+
+- GET https://apivirtualmachines2.students.nomoredomains.icu/api/v1 - стартовая страница
+- POST https://apivirtualmachines2.students.nomoredomains.icu/api/v1/users - регистрация пользователя
+- POST https://apivirtualmachines2.students.nomoredomains.icu/api/v1/login - авторизация пользователя (вход)
+- GET https://apivirtualmachines2.students.nomoredomains.icu/api/v1/logout - выход пользователя
+- POST https://apivirtualmachines2.students.nomoredomains.icu/api/v1/orders - размещение заказа на создание ВМ
+- GET https://apivirtualmachines2.students.nomoredomains.icu/api/v1/orders/:id/status - получение информации о статусе заказа ВМ
+- GET https://apivirtualmachines2.students.nomoredomains.icu/api/v1/orders/:id - получение описания заказа пользователя
+- GET https://apivirtualmachines2.students.nomoredomains.icu/api/v1/orders - получение описания всех заказов пользователя
+
 
 ## Запуск приложнеия
 Для начала необоходимо установить Docker на свой компьютер и клонировать проект API_Virtual_Machines.
