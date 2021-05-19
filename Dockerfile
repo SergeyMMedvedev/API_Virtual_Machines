@@ -1,4 +1,4 @@
-FROM node:13
+FROM node:16
 RUN mkdir -p /opt/app
 WORKDIR /opt/app
 RUN adduser app
